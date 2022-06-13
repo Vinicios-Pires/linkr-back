@@ -1,0 +1,2 @@
+/*Implementar middleware de validacao joi generico
+  O middleware recebe um Joi Schema e realiza a validacao*/
