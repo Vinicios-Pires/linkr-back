@@ -6,3 +6,11 @@ CREATE TABLE IF NOT EXISTS "users"(
   "pictureUrl" text NOT NULL,
   "createdAt" timestamp NOT NULL DEFAULT now()
 );
+
+CREATE TABLE IF NOT EXISTS "posts"(
+  "id" SERIAL PRIMARY KEY,
+  "postURL" text NOT NULL,
+  "description" varchar(500),
+  "userId" integer NOT NULL REFERENCES users(id),
+  "createdAt" timestamp NOT NULL DEFAULT now()
+);
