@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS "posts"(
 CREATE TABLE IF NOT EXISTS "likes"(
   "id" SERIAL PRIMARY KEY,
   "userId" INTEGER REFERENCES users(id), 
-  "postId" INTEGER REFERENCES posts(id), 
+  "postId" INTEGER REFERENCES posts(id)
 )
 
 CREATE TABLE IF NOT EXISTS "tags"(
