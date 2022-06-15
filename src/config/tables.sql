@@ -9,10 +9,11 @@ CREATE TABLE IF NOT EXISTS "users"(
 
 CREATE TABLE IF NOT EXISTS "posts"(
   "id" SERIAL PRIMARY KEY,
-  "userId" INTEGER REFERENCES users(id),
-  "linkId" INTEGER REFERENCES links(id),
-  "description" VARCHAR(255) NOT NULL,
-  "createdAt" TIMESTAMP NOT NULL DEFAULT NOW ()
+  "url" text NOT NULL,
+  "description" varchar(255),
+  "userId" integer NOT NULL REFERENCES users(id),
+  "linkId" integer NOT NULL REFERENCES links(id),
+  "createdAt" timestamp NOT NULL DEFAULT now()
 );
 
 CREATE TABLE IF NOT EXISTS "links"{
@@ -25,8 +26,8 @@ CREATE TABLE IF NOT EXISTS "links"{
 
 CREATE TABLE IF NOT EXISTS "likes"(
   "id" SERIAL PRIMARY KEY,
-  "userId" INTEGER REFERENCES users(id), 
-  "postId" INTEGER REFERENCES posts(id)
+  "userId" INTEGER NOT NULL REFERENCES users(id), 
+  "postId" INTEGER NOT NULL REFERENCES posts(id)
 )
 
 CREATE TABLE IF NOT EXISTS "tags"(

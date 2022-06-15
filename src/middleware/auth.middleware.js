@@ -1,5 +1,10 @@
 import { compareSync } from "bcrypt";
+import JWTVerify from "../utils/JWTVerify.js";
+import dotenv from "dotenv";
+dotenv.config();
+
 import userRepository from "../repositories/user.repository.js";
+import { bearerTokenSchema } from "../schemas/auth.schema.js";
 
 const checkEmailAvailable = async (req, res, next) => {
   const emailAlreadyRegisted = await userRepository.findUserByEmail(req.body.email);
@@ -26,9 +31,29 @@ const validateCredentials = async (req, res, next) => {
   }
 };
 
+const validateToken = (schema) => {
+  return (bearerTokenSchema[schema] = (req, res, next) => {
+    const { error } = schema.validate(req.headers, { abortEarly: false });
+    if (error) {
+      return res.sendStatus(401);
+    }
+
+    try {
+      const token = req.headers.authorization.split(" ")[1];
+      const userData = JWTVerify(token);
+      res.locals.userData = userData;
+      next();
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
+    }
+  });
+};
+
 const authMiddleware = {
   checkEmailAvailable,
   validateCredentials,
+  validateToken,
 };
 
 export default authMiddleware;
