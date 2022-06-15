@@ -7,6 +7,14 @@ CREATE TABLE IF NOT EXISTS "users"(
   "createdAt" timestamp NOT NULL DEFAULT now()
 );
 
+CREATE TABLE IF NOT EXISTS "links"(
+  "id" SERIAL PRIMARY KEY,
+  "title" VARCHAR(255) NOT NULL,
+  "image" TEXT NOT NULL,
+  "description" VARCHAR(255) NOT NULL,
+  "url" TEXT NOT NULL UNIQUE 
+);
+
 CREATE TABLE IF NOT EXISTS "posts"(
   "id" SERIAL PRIMARY KEY,
   "url" text NOT NULL,
@@ -16,19 +24,11 @@ CREATE TABLE IF NOT EXISTS "posts"(
   "createdAt" timestamp NOT NULL DEFAULT now()
 );
 
-CREATE TABLE IF NOT EXISTS "links"{
-  "id" SERIAL PRIMARY KEY,
-  "title" VARCHAR(255) NOT NULL,
-  "image" TEXT NOT NULL,
-  "description" VARCHAR(255) NOT NULL,
-  "url" TEXT NOT NULL UNIQUE 
-}
-
 CREATE TABLE IF NOT EXISTS "likes"(
   "id" SERIAL PRIMARY KEY,
   "userId" INTEGER NOT NULL REFERENCES users(id), 
   "postId" INTEGER NOT NULL REFERENCES posts(id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS "tags"(
   "id" SERIAL PRIMARY KEY,
