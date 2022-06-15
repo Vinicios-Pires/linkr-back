@@ -15,7 +15,9 @@ const signUserUp = async (req, res) => {
 const signUserIn = async (_req, res) => {
   try {
     const { username, email, pictureUrl } = res.locals;
-    const token = jwt.sign({ username, email, pictureUrl }, process.env.JWT_SECRET);
+    const token = jwt.sign({ username, email, pictureUrl }, process.env.JWT_SECRET, {
+      expiresIn: "1hr",
+    });
     res.status(200).send({ token });
   } catch (err) {
     console.dir(err);
