@@ -1,5 +1,3 @@
-import { Router } from "express";
-
 import postsController from "../controllers/posts.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 import JoiValidation from "../middleware/joi.validation.js";
