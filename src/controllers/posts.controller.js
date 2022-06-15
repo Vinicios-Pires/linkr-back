@@ -21,12 +21,14 @@ const getPosts = async (req, res) => {
   try {
     const { rows: posts } = await postsRepository.getPosts();
     res.status(200).send(posts); // sucess && send posts to front
-    if(posts.rowCount > 0){
-      return res.status(409).send("There are no posts yet")
+    if (posts.rowCount > 0) {
+      return res.status(409).send("There are no posts yet");
     }
   } catch (err) {
     console.log(err);
-    return res.sendStatus(500).send("An error occured while trying to fetch the posts, please refresh the page"); // server error
+    return res
+      .sendStatus(500)
+      .send("An error occured while trying to fetch the posts, please refresh the page"); // server error
   }
 };
 
