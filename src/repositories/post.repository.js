@@ -8,7 +8,7 @@ const createPost = async (url, description, userId) => {
 };
 
 const getPosts = async () => {
-  return db.query(`SELECT "postURL", description FROM posts ORDER BY id DESC LIMIT 10;`);
+  return db.query(`SELECT "postURL", description FROM posts ORDER BY timestamp DESC LIMIT 20;`);
 };
 
 const postsRepository = {
