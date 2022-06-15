@@ -1,7 +1,7 @@
 import { compareSync } from "bcrypt";
+import jwt from "jsonwebtoken";
 import JWTVerify from "../utils/JWTVerify.js";
-import dotenv from "dotenv";
-dotenv.config();
+import "dotenv/config";
 
 import userRepository from "../repositories/user.repository.js";
 import { bearerTokenSchema } from "../schemas/auth.schema.js";
@@ -20,9 +20,10 @@ const validateCredentials = async (req, res, next) => {
   if (!user || !compareSync(password, user.password)) {
     res.status(401).send("Invalid email or password");
   } else {
-    const { username, email, pictureUrl } = user;
+    const { id, username, email, pictureUrl } = user;
 
     res.locals.user = {
+      id,
       username,
       email,
       pictureUrl,
@@ -31,23 +32,22 @@ const validateCredentials = async (req, res, next) => {
   }
 };
 
-const validateToken = (schema) => {
-  return (bearerTokenSchema[schema] = (req, res, next) => {
-    const { error } = schema.validate(req.headers, { abortEarly: false });
-    if (error) {
-      return res.sendStatus(401);
-    }
+const validateToken = (req, res, next) => {
+  const { error } = bearerTokenSchema.validate(req.headers, { abortEarly: false });
+  if (error)
+    return res
+      .status(401)
+      .send({ message: "Authorization: Bearer TOKEN header is required" });
 
-    try {
-      const token = req.headers.authorization.split(" ")[1];
-      const userData = JWTVerify(token);
-      res.locals.userData = userData;
-      next();
-    } catch (err) {
-      console.log(err);
-      res.sendStatus(500);
-    }
-  });
+  try {
+    const token = req.headers.authorization.split(" ")[1];
+    const userData = JWTVerify(token);
+    res.locals.userData = userData;
+    next();
+  } catch (err) {
+    console.dir(err);
+    res.status(401).send({ message: err.message });
+  }
 };
 
 const authMiddleware = {

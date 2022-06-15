@@ -4,7 +4,9 @@ const createPost = async (req, res) => {
   const { url, description } = req.body;
   const { id } = res.locals.userData;
 
-  console.log(res.locals.userData)
+  //TODO: precisa verificar se ja existe um link no bd com essa url,
+  //Caso nao exista o link, adicionar um novo link ao bd
+  //Pegar 'id' do link do bd pra poder criar um post
 
   try {
     await postsRepository.createPost(url, description, id);
