@@ -1,14 +1,16 @@
-import { Router } from "express";
 import postsController from "../controllers/posts.controller.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 import JoiValidation from "../middleware/joi.validation.js";
-import {PostSchema,LinkSchema} from "../schemas/posts.schema.js";
-import postMiddleware from "../middleware/posts.middleware.js";
+import { PostSchema } from "../schemas/posts.schema.js";
 
-const router = Router();
+const postsRouter = Router();
 
-router.get(
-    "/post",
-    postsController.getPosts
-)
+postsRouter.post(
+  "/timeline",
+  authMiddleware.validateToken,
+  JoiValidation(PostSchema),
+  postsController.createPost,
+);
+postsRouter.get("/timeline", postsController.getPosts);
 
-export default router;
+export default postsRouter;
