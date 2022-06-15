@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS "users"(
 
 CREATE TABLE IF NOT EXISTS "posts"(
   "id" SERIAL PRIMARY KEY,
-  "postURL" text NOT NULL,
-  "description" varchar(500),
+  "url" text NOT NULL,
+  "description" varchar(255),
   "userId" integer NOT NULL REFERENCES users(id),
   "linkId" integer NOT NULL REFERENCES links(id),
   "createdAt" timestamp NOT NULL DEFAULT now()
