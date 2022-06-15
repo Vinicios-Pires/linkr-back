@@ -6,11 +6,13 @@ const findUserByEmail = async (email) => {
   return rows[0];
 };
 
-const createUser = async (username, email, password, pictureUrl) => {
-  await db.query(
-    'INSERT INTO users (username, email, password, "pictureUrl") values ($1,$2,$3,$4)',
+const createUser = async (userInfo) => {
+  const { username, email, password, pictureUrl } = userInfo;
+  const { rows } = await db.query(
+    `INSERT INTO users (username, email, password, "pictureUrl") values ($1,$2,$3,$4) RETURNING *;`,
     [username, email, hashSync(password, 10), pictureUrl],
   );
+  return rows[0];
 };
 
 const userRepository = {
