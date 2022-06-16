@@ -1,5 +1,4 @@
 import postsRepository from "../repositories/posts.repository.js";
-import linkRepository from "../repositories/links.repository.js";
 import linksRepository from "../repositories/links.repository.js";
 
 const createPost = async (req, res) => {
@@ -7,7 +6,7 @@ const createPost = async (req, res) => {
   const { id: userId } = res.locals.userData;
 
   const { id: linkId } =
-    (await linkRepository.getLinkByUrl(url)) || (await linksRepository.createLink(url));
+    (await linksRepository.getLinkByUrl(url)) || (await linksRepository.createLink(url));
 
   try {
     await postsRepository.createPost(url, description, userId, linkId);
