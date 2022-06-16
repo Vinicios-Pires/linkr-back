@@ -10,7 +10,7 @@ const createPost = async (url, description, userId) => {
 
 const getPosts = async () => {
   return db.query(
-    `SELECT "postURL", description FROM posts ORDER BY timestamp DESC LIMIT 20;`,
+    `SELECT url, description FROM posts ORDER BY "createdAt" DESC LIMIT 20;`,
   );
 };
 
