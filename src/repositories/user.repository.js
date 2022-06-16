@@ -1,6 +1,15 @@
 import { hashSync } from "bcrypt";
 import db from "../config/db.js";
 
+const findUsersByUsername = async (partialUsername) => {
+  const { rows } = await db.query(
+    `SELECT username, "pictureUrl" FROM users
+    WHERE username LIKE $1;`,
+    [`${partialUsername}%`],
+  );
+  return rows;
+};
+
 const findUserByEmail = async (email) => {
   const { rows } = await db.query("SELECT * FROM users WHERE email = $1;", [email]);
   return rows[0];
@@ -16,6 +25,7 @@ const createUser = async (userInfo) => {
 };
 
 const userRepository = {
+  findUsersByUsername,
   findUserByEmail,
   createUser,
 };
