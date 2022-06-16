@@ -35,9 +35,7 @@ const validateCredentials = async (req, res, next) => {
 const validateToken = (req, res, next) => {
   const { error } = bearerTokenSchema.validate(req.headers, { abortEarly: false });
   if (error)
-    return res
-      .status(401)
-      .send({ message: "Authorization: Bearer TOKEN header is required" });
+    return res.status(401).send("Authorization: Bearer TOKEN header is required");
 
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -46,7 +44,7 @@ const validateToken = (req, res, next) => {
     next();
   } catch (err) {
     console.dir(err);
-    res.status(401).send({ message: err.message });
+    res.status(401).send(err.message);
   }
 };
 
