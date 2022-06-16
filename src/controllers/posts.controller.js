@@ -27,7 +27,7 @@ const getPosts = async (req, res) => {
   } catch (err) {
     console.log(err);
     return res
-      .sendStatus(500)
+      .status(500)
       .send("An error occured while trying to fetch the posts, please refresh the page"); // server error
   }
 };
