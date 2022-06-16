@@ -1,11 +1,10 @@
 import db from "./../config/db.js";
 
-const createPost = async (url, description, userId) => {
-  await db.query(`INSERT INTO posts (url, description, "userId") VALUES ($1, $2, $3)`, [
-    url,
-    description,
-    userId,
-  ]);
+const createPost = async (url, description, userId, linkId) => {
+  await db.query(
+    `INSERT INTO posts (url, description, "userId", "linkId") VALUES ($1, $2, $3, $4)`,
+    [url, description, userId, linkId],
+  );
 };
 
 const getPosts = async () => {
