@@ -1,15 +1,15 @@
 import postsRepository from "../repositories/posts.repository.js";
+import linksRepository from "../repositories/links.repository.js";
 
 const createPost = async (req, res) => {
   const { url, description } = req.body;
-  const { id } = res.locals.userData;
+  const { id: userId } = res.locals.userData;
 
-  //TODO: precisa verificar se ja existe um link no bd com essa url,
-  //Caso nao exista o link, adicionar um novo link ao bd
-  //Pegar 'id' do link do bd pra poder criar um post
+  const { id: linkId } =
+    (await linksRepository.getLinkByUrl(url)) || (await linksRepository.createLink(url));
 
   try {
-    await postsRepository.createPost(url, description, id);
+    await postsRepository.createPost(url, description, userId, linkId);
     res.sendStatus(201); // created
   } catch (err) {
     console.dir(err);
@@ -17,7 +17,7 @@ const createPost = async (req, res) => {
   }
 };
 
-const getPosts = async (req, res) => {
+const getPosts = async (_req, res) => {
   try {
     const { rows: posts } = await postsRepository.getPosts();
     res.status(200).send(posts); // sucess && send posts to front
