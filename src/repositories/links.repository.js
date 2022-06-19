@@ -8,6 +8,7 @@ const getLinkByUrl = async (url) => {
 
 const createLink = async (url) => {
   const { title, image, description } = await getUrlMetadata(url);
+
   const { rows } = await db.query(
     "INSERT INTO links (title, image, description, url) VALUES ($1, $2, $3, $4) RETURNING id;",
     [title, image, description, url],
