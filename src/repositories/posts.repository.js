@@ -13,9 +13,32 @@ const getPosts = async () => {
   );
 };
 
+const getPostById = async (id) => {
+  return db.query("SELECT * FROM posts WHERE id = $1", [id]);
+};
+
+const deletePost = async (id) => {
+  return db.query("DELETE FROM posts WHERE id = $1", [id]);
+};
+
+const updatePost = async (url, description, userId) => {
+  return db.query(
+    `
+  UPDATE posts
+  SET
+    url = $1,
+    description = $2
+  WHERE "userId" = $3`,
+    [url, description, userId],
+  );
+};
+
 const postsRepository = {
   createPost,
   getPosts,
+  getPostById,
+  deletePost,
+  updatePost,
 };
 
 export default postsRepository;
