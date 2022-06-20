@@ -9,7 +9,17 @@ const createPost = async (url, description, userId, linkId) => {
 
 const getPosts = async () => {
   return db.query(
-    `SELECT url, description FROM posts ORDER BY "createdAt" DESC LIMIT 20;`,
+    `SELECT  p.description, u."pictureUrl", u.username, 
+    json_build_object(
+      'title', l.title,
+      'image', l.image,
+      'description', l.description,
+      'url', l.url
+    ) as "linkData"
+    FROM posts p
+    JOIN users u ON u.id = p."userId"
+    JOIN links l ON l.id = p."linkId"
+    ORDER BY p."createdAt" DESC LIMIT 20;`,
   );
 };
 
