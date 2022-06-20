@@ -23,9 +23,12 @@ const signUserIn = async (_req, res) => {
   }
 };
 
+const successResponse = (_req, res) => res.sendStatus(200);
+
 const authController = {
   signUserUp,
   signUserIn,
+  successResponse,
 };
 
 export default authController;
