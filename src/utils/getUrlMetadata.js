@@ -1,7 +1,7 @@
 import urlMetadata from "url-metadata";
 
 export default async function getUrlMetadata(url) {
-  const { title, image, description } = urlMetadata(url).catch(() => {});
+  const { title, image, description } = await urlMetadata(url).catch(() => null);
 
   return {
     title: title || "This url has no title metadata",
