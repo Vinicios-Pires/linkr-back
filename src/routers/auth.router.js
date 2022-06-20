@@ -20,4 +20,10 @@ router.post(
   authController.signUserIn,
 );
 
+router.post(
+  "/validateToken",
+  authMiddleware.validateToken,
+  authController.successResponse,
+);
+
 export default router;

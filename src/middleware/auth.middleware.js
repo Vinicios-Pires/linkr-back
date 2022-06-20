@@ -1,5 +1,4 @@
 import { compareSync } from "bcrypt";
-import jwt from "jsonwebtoken";
 import JWTVerify from "../utils/JWTVerify.js";
 import "dotenv/config";
 
