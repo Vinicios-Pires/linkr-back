@@ -1,4 +1,5 @@
 import postsRepository from "../repositories/posts.repository.js";
+import urlMetadata from "url-metadata";
 import linksRepository from "../repositories/links.repository.js";
 import db from "../config/db.js";
 
@@ -85,9 +86,38 @@ const updatePost = async (req, res) => {
   }
 };
 
+const getMetadata = async (req, res) => {
+  const postPromise = [];
+  for (let i = 0; i < posts.length; i++) {
+    try {
+      const metadata = urlMetadata(posts[i].url);
+      postPromise.push(metadata);
+    } catch (err) {
+      console.log(err);
+      return res.sendStatus(500).send("An error occured. Please,refresh the page");
+    }
+  }
+  const postMetadata = await Promise.all(postPromise);
+  const postData = [];
+  for (let i = 0; i < postMetadata.length; i++) {
+    postData.push({
+      ...posts[i],
+      postData: {
+        postUrl: postMetadata[i].url,
+        postImage: postMetadata[i].image,
+        postTitle: postMetadata[i].title,
+        postDescription: postMetadata[i].description,
+      },
+    });
+  }
+  return postData;
+};
+
 const postsController = {
   createPost,
   getPosts,
+  getMetadata,
+
   deletePost,
   updatePost,
 };
