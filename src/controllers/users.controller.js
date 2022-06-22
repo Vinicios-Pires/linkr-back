@@ -1,7 +1,5 @@
 import userRepository from "../repositories/user.repository.js";
 
-import db from "../config/db.js";
-
 const findUsersByUsername = async (req, res) => {
   try {
     const { username } = req.query;
