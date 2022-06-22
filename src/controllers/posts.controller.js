@@ -89,7 +89,6 @@ const updatePost = async (req, res) => {
 const postsController = {
   createPost,
   getPosts,
-
   deletePost,
   updatePost,
 };

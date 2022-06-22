@@ -24,10 +24,31 @@ const createUser = async (userInfo) => {
   return rows[0];
 };
 
+const findPostsByUser = async (id) => {
+  const { rows } = await db.query(
+    `SELECT u.username, u."pictureUrl", p.description,
+    json_build_object(
+      'title', l.title,
+      'image', l.image,
+      'description', l.description,
+      'url', l.url
+    ) as "linkData"
+    FROM posts p
+    JOIN users u ON p."userId" = u.id
+    JOIN links l ON p."linkId" = l.id
+    WHERE p."userId" = $1
+    ORDER BY p."createdAt" DESC LIMIT 20;`,
+    [id],
+  );
+
+  return rows;
+};
+
 const userRepository = {
   findUsersByUsername,
   findUserByEmail,
   createUser,
+  findPostsByUser,
 };
 
 export default userRepository;
