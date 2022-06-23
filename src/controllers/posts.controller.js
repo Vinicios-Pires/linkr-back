@@ -1,6 +1,7 @@
 import db from "../config/db.js";
 import linksRepository from "../repositories/links.repository.js";
 import postsRepository from "../repositories/posts.repository.js";
+import likesRepository from "../repositories/likes.repository.js";
 
 const createPost = async (req, res) => {
   const { url, description } = req.body;
@@ -21,11 +22,13 @@ const createPost = async (req, res) => {
 
 const getPosts = async (_req, res) => {
   try {
-    const { rows: posts } = await postsRepository.getPosts();
-    res.status(200).send(posts);
+    const { id: userId } = res.locals.userData;
+    const { rows: posts } = await postsRepository.getPosts(userId);
+    console.log(posts);
     if (posts.rowCount > 0) {
       return res.status(409).send("There are no posts yet");
     }
+    res.status(200).send(posts);
   } catch (err) {
     console.log(err);
     return res
@@ -86,11 +89,30 @@ const updatePost = async (req, res) => {
   }
 };
 
+const handleLikeDislikePost = async (req, res) => {
+  try {
+    const { postId, likeAction } = req.params;
+    const { id: userId } = res.locals.userData;
+
+    if (likeAction === "like") {
+      await likesRepository.createLike(postId, userId);
+      return res.sendStatus(201);
+    }
+
+    await likesRepository.removeLike(postId, userId);
+    return res.sendStatus(204);
+  } catch (err) {
+    console.dir(err);
+    res.status(500).send("Error while liking post");
+  }
+};
+
 const postsController = {
   createPost,
   getPosts,
   deletePost,
   updatePost,
+  handleLikeDislikePost,
 };
 
 export default postsController;

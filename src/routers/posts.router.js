@@ -13,7 +13,7 @@ postsRouter.post(
   postsController.createPost,
 );
 
-postsRouter.get("/timeline", postsController.getPosts);
+postsRouter.get("/timeline", authMiddleware.validateToken, postsController.getPosts);
 
 postsRouter.delete(
   "/timeline/:id",
@@ -26,6 +26,12 @@ postsRouter.put(
   authMiddleware.validateToken,
   JoiValidation(PostSchema),
   postsController.updatePost,
+);
+
+postsRouter.post(
+  "/posts/:postId/:likeAction",
+  authMiddleware.validateToken,
+  postsController.handleLikeDislikePost,
 );
 
 export default postsRouter;
