@@ -34,3 +34,9 @@ CREATE TABLE IF NOT EXISTS "tags"(
   "id" SERIAL PRIMARY KEY,
   "name" VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS "follows"(
+  "id" SERIAL PRIMARY KEY,
+  "followerId" INTEGER NOT NULL REFERENCES users(id), 
+  "followedId" INTEGER NOT NULL REFERENCES users(id)
+);
