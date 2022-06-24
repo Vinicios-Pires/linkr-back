@@ -7,19 +7,24 @@ const createPost = async (url, description, userId, linkId) => {
   );
 };
 
-const getPosts = async () => {
+const getPosts = async (userId) => {
   return db.query(
-    `SELECT  p.description, u."pictureUrl", u.username, 
+    `SELECT p.id, p.description, post_author."pictureUrl", post_author.username, 
     json_build_object(
-      'title', l.title,
-      'image', l.image,
-      'description', l.description,
-      'url', l.url
-    ) as "linkData"
+      'title', links.title,
+      'image', links.image,
+      'description', links.description,
+      'url', links.url
+    ) as "linkData",
+    array_remove(ARRAY[user_who_liked.username], NULL) as "likes" ,
+    EXISTS (SELECT 1 FROM likes WHERE likes."postId" = p.id AND likes."userId" = $1) as "userHasLiked"
     FROM posts p
-    JOIN users u ON u.id = p."userId"
-    JOIN links l ON l.id = p."linkId"
+    JOIN users post_author ON post_author.id = p."userId"
+    JOIN links ON links.id = p."linkId"
+    LEFT JOIN likes ON likes."postId" = p.id
+    LEFT JOIN users user_who_liked ON likes."userId" = user_who_liked.id 
     ORDER BY p."createdAt" DESC LIMIT 20;`,
+    [userId],
   );
 };
 

@@ -21,7 +21,7 @@ const validateCredentials = async (req, res, next) => {
   } else {
     const { id, username, email, pictureUrl } = user;
 
-    res.locals.user = {
+    res.locals.userData = {
       id,
       username,
       email,
