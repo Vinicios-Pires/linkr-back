@@ -1,6 +1,9 @@
 import db from "../config/db.js";
 import linksRepository from "../repositories/links.repository.js";
 import postsRepository from "../repositories/posts.repository.js";
+import hashtagsRepository from "../repositories/trending.repository.js";
+import findOrCreateHashtag from "../utils/find.create.hashtag.js";
+
 import likesRepository from "../repositories/likes.repository.js";
 
 const createPost = async (req, res) => {
@@ -12,7 +15,19 @@ const createPost = async (req, res) => {
       (await linksRepository.getLinkByUrl(url)) ||
       (await linksRepository.createLink(url));
 
-    await postsRepository.createPost(url, description, userId, linkId);
+      await postsRepository.createPost(url, description, userId, linkId)
+    const resultMakePost = await (postsRepository.getLatestPost());
+
+    console.log(resultMakePost.rows[0].max)
+    
+    const hashtagsId = await findOrCreateHashtag(description);
+        if (hashtagsId === -1) return res.sendStatus(500);
+        if (hashtagsId === 0) return res.sendStatus(201);
+        hashtagsRepository.insertManyPostHashtags(
+          resultMakePost.rows[0].max,
+            hashtagsId,
+        );
+
     res.sendStatus(201); // created
   } catch (err) {
     console.dir(err);
@@ -24,7 +39,6 @@ const getPosts = async (_req, res) => {
   try {
     const { id: userId } = res.locals.userData;
     const { rows: posts } = await postsRepository.getPosts(userId);
-    console.log(posts);
     if (posts.rowCount > 0) {
       return res.status(409).send("There are no posts yet");
     }

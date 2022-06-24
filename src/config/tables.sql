@@ -35,6 +35,20 @@ CREATE TABLE IF NOT EXISTS "tags"(
   "name" VARCHAR(255) NOT NULL
 );
 
+CREATE TABLE "hashtags" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+
+    CONSTRAINT "hashtags_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "postHashtag" (
+    "id" SERIAL NOT NULL,
+    "postId" INTEGER NOT NULL,
+    "hashtagId" INTEGER NOT NULL,
+    CONSTRAINT "postHashtag_pkey" PRIMARY KEY ("id")
+);
+
 CREATE TABLE IF NOT EXISTS "follows"(
   "id" SERIAL PRIMARY KEY,
   "followerId" INTEGER NOT NULL REFERENCES users(id), 

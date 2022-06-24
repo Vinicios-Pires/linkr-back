@@ -3,7 +3,7 @@ import likesRepository from "./likes.repository.js";
 
 const createPost = async (url, description, userId, linkId) => {
   await db.query(
-    `INSERT INTO posts (url, description, "userId", "linkId") VALUES ($1, $2, $3, $4)`,
+    `INSERT INTO posts (url, description, "userId", "linkId") VALUES ($1, $2, $3, $4);`,
     [url, description, userId, linkId],
   );
 };
@@ -27,6 +27,12 @@ const getPosts = async (userId) => {
     ORDER BY p."createdAt" DESC LIMIT 20;`,
     [userId],
   );
+};
+
+
+
+const getLatestPost = async () => {
+  return db.query(`SELECT max(id) FROM posts;`);
 };
 
 const getPostById = async (id) => {
@@ -57,6 +63,7 @@ const postsRepository = {
   getPostById,
   deletePost,
   updatePost,
+  getLatestPost,
 };
 
 export default postsRepository;
