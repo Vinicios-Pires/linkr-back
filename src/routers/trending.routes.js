@@ -1,10 +1,10 @@
 import { Router } from "express"
 
-import { getTrendings, getHashtagPosts } from "../controllers/trending.controller.js"
+import trendingController from "../controllers/trending.controller.js"
 
 const trendingRouter = Router()
 
-trendingRouter.get("/trending", getTrendings)
-trendingRouter.get("/trending/:hashtag", getHashtagPosts)
+trendingRouter.get("/trending", trendingController.getTrendings)
+trendingRouter.get("/trending/:hashtag", trendingController.getHashtagPosts)
 
 export default trendingRouter

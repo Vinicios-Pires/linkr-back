@@ -13,19 +13,21 @@ const getTrendingHashtags = async () => {
 
 const getPostsByHash = async (hashtag) => {
     return await db.query(
-      `SELECT  p.description, u."pictureUrl", u.username, 
-      json_build_object(
-        'title', l.title,
-        'image', l.image,
-        'description', l.description,
-        'url', l.url
-      ) as "linkData"
-      FROM posts p
+        `SELECT p.id, p.description, post_author."pictureUrl", post_author.username, post_author.id as "authorId",
+        json_build_object(
+          'title', links.title,
+          'image', links.image,
+          'description', links.description,
+          'url', links.url
+        ) as "linkData",
+        array_remove(ARRAY[user_who_liked.username], NULL) as "likes" ,
+        EXISTS (SELECT 1 FROM likes WHERE likes."postId" = p.id AND likes."userId" = $1) as "userHasLiked"
+        FROM posts p
       JOIN users u ON u.id = p."userId"
       JOIN links l ON l.id = p."linkId"
       JOIN "postHashtag" ph ON ph."postId" = p.id 
       JOIN hashtags h ON h.id = ph."hashtagId"
-      WHERE h.name ~* $1
+      WHERE h.name = $1
       ORDER BY p."createdAt" DESC LIMIT 20;`,
       [hashtag],
     );
