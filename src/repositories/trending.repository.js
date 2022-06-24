@@ -11,25 +11,28 @@ const getTrendingHashtags = async () => {
     `);
 };
 
-const getPostsByHash = async (hashtag) => {
+const getPostsByHash = async (userId, hashtag) => {
     return await db.query(
         `SELECT p.id, p.description, post_author."pictureUrl", post_author.username, post_author.id as "authorId",
-        json_build_object(
-          'title', links.title,
-          'image', links.image,
-          'description', links.description,
-          'url', links.url
-        ) as "linkData",
-        array_remove(ARRAY[user_who_liked.username], NULL) as "likes" ,
-        EXISTS (SELECT 1 FROM likes WHERE likes."postId" = p.id AND likes."userId" = $1) as "userHasLiked"
-        FROM posts p
-      JOIN users u ON u.id = p."userId"
-      JOIN links l ON l.id = p."linkId"
-      JOIN "postHashtag" ph ON ph."postId" = p.id 
-      JOIN hashtags h ON h.id = ph."hashtagId"
-      WHERE h.name = $1
-      ORDER BY p."createdAt" DESC LIMIT 20;`,
-      [hashtag],
+    json_build_object(
+      'title', links.title,
+      'image', links.image,
+      'description', links.description,
+      'url', links.url
+    ) as "linkData",
+    array_remove(ARRAY[user_who_liked.username], NULL) as "likes" ,
+    EXISTS (SELECT 1 FROM likes WHERE likes."postId" = p.id AND likes."userId" = $1) as "userHasLiked"
+    FROM posts p
+    JOIN users post_author ON post_author.id = p."userId"
+    JOIN links ON links.id = p."linkId"
+    JOIN "postHashtag" ph ON ph."postId" = p.id 
+    JOIN hashtags h ON h.id = ph."hashtagId"
+    LEFT JOIN likes ON likes."postId" = p.id
+    LEFT JOIN users user_who_liked ON likes."userId" = user_who_liked.id
+
+    WHERE h.name = $2
+    ORDER BY p."createdAt" DESC LIMIT 20;`,
+      [userId, hashtag],
     );
   };
 

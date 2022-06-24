@@ -16,10 +16,14 @@ async function getTrendings(req, res) {
 
 const getHashtagPosts = async (req, res) => {
   const { hashtag } = req.params;
-  console.log(hashtag)
+
   try {
-    const postsUser = await trendingRepository.getPostsByHash(hashtag);
-    console.log(postsUser)
+    const { id: userId } = res.locals.userData;
+    console.log(userId)
+    const { rows: postsUser } = await trendingRepository.getPostsByHash(userId, hashtag);
+    if (postsUser.rowCount > 0) {
+      return res.status(409).send("There are no posts yet");
+    }
     res.status(200).send(postsUser);
   } catch (err) {
     console.log(err);

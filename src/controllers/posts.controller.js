@@ -21,7 +21,6 @@ const createPost = async (req, res) => {
     console.log(resultMakePost.rows[0].max)
     
     const hashtagsId = await findOrCreateHashtag(description);
-    console.log(hashtagsId)
         if (hashtagsId === -1) return res.sendStatus(500);
         if (hashtagsId === 0) return res.sendStatus(201);
         hashtagsRepository.insertManyPostHashtags(
