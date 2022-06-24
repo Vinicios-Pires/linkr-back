@@ -24,7 +24,7 @@ const getPosts = async (userId) => {
     JOIN links ON links.id = p."linkId"
     LEFT JOIN likes ON likes."postId" = p.id
     LEFT JOIN users user_who_liked ON likes."userId" = user_who_liked.id 
-    ORDER BY p."createdAt" DESC LIMIT 20;`,
+    ORDER BY p."createdAt" DESC LIMIT 10;`,
     [userId],
   );
 };

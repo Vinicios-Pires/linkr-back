@@ -24,7 +24,6 @@ const getPosts = async (_req, res) => {
   try {
     const { id: userId } = res.locals.userData;
     const { rows: posts } = await postsRepository.getPosts(userId);
-    console.log(posts);
     if (posts.rowCount > 0) {
       return res.status(409).send("There are no posts yet");
     }
