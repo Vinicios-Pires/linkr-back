@@ -41,7 +41,7 @@ const findPostsByUser = async (id) => {
     LEFT JOIN likes ON likes."postId" = p.id
     LEFT JOIN users user_who_liked ON likes."userId" = user_who_liked.id 
     WHERE p."userId" = $1
-    ORDER BY p."createdAt" DESC LIMIT 20;`,
+    ORDER BY p."createdAt" DESC LIMIT 10;`,
     [id],
   );
 
