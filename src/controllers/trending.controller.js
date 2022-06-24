@@ -19,7 +19,6 @@ const getHashtagPosts = async (req, res) => {
 
   try {
     const { id: userId } = res.locals.userData;
-    console.log(userId)
     const { rows: postsUser } = await trendingRepository.getPostsByHash(userId, hashtag);
     if (postsUser.rowCount > 0) {
       return res.status(409).send("There are no posts yet");

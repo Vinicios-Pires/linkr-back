@@ -53,16 +53,15 @@ const getPosts = async (_req, res) => {
 
 const deletePost = async (req, res) => {
   const { id } = req.params;
-  const { user } = res.locals;
+  const { userData } = res.locals;
 
   try {
     const result = await postsRepository.getPostById(id);
-    if (result.rowCount === 0) {
+    if (!result) {
       return res.sendStatus(404);
     }
 
-    const [post] = result.rows;
-    if (post.userId !== user.id) {
+    if (result.userId !== userData.id) {
       return res.sendStatus(401);
     }
 

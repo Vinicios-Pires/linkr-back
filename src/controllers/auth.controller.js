@@ -5,7 +5,7 @@ const signUserUp = async (req, res) => {
   try {
     const { id, username, email, pictureUrl } = await userRepository.createUser(req.body);
     const token = JwtSign(id, username, email, pictureUrl);
-    res.status(201).send({ token, username, email, pictureUrl });
+    res.status(201).send({ token, id, username, email, pictureUrl });
   } catch (err) {
     console.dir(err);
     res.status(500).send("Internal server error while signing user up");
@@ -16,7 +16,7 @@ const signUserIn = async (_req, res) => {
   try {
     const { id, username, email, pictureUrl } = res.locals.userData;
     const token = JwtSign(id, username, email, pictureUrl);
-    res.status(200).send({ token, username, email, pictureUrl });
+    res.status(200).send({ token, id, username, email, pictureUrl });
   } catch (err) {
     console.dir(err);
     res.status(500).send("Internal server error while signing user in");
