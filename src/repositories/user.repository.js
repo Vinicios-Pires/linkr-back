@@ -3,7 +3,7 @@ import db from "../config/db.js";
 
 const findUsersByUsername = async (partialUsername) => {
   const { rows } = await db.query(
-    `SELECT username, "pictureUrl" FROM users
+    `SELECT id, username, "pictureUrl" FROM users
     WHERE username LIKE $1;`,
     [`${partialUsername}%`],
   );
@@ -26,16 +26,20 @@ const createUser = async (userInfo) => {
 
 const findPostsByUser = async (id) => {
   const { rows } = await db.query(
-    `SELECT u.username, u."pictureUrl", p.description,
+    `SELECT p.id, p.description, post_author."pictureUrl", post_author.username,
     json_build_object(
-      'title', l.title,
-      'image', l.image,
-      'description', l.description,
-      'url', l.url
-    ) as "linkData"
+      'title', links.title,
+      'image', links.image,
+      'description', links.description,
+      'url', links.url
+    ) as "linkData",
+    array_remove(ARRAY[user_who_liked.username], NULL) as "likes" ,
+    EXISTS (SELECT 1 FROM likes WHERE likes."postId" = p.id AND likes."userId" = $1) as "userHasLiked"
     FROM posts p
-    JOIN users u ON p."userId" = u.id
-    JOIN links l ON p."linkId" = l.id
+    JOIN users post_author ON post_author.id = p."userId"
+    JOIN links ON links.id = p."linkId"
+    LEFT JOIN likes ON likes."postId" = p.id
+    LEFT JOIN users user_who_liked ON likes."userId" = user_who_liked.id 
     WHERE p."userId" = $1
     ORDER BY p."createdAt" DESC LIMIT 20;`,
     [id],
