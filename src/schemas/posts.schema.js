@@ -1,5 +1,9 @@
 import Joi from "joi";
 
+export const DescriptionSchema = Joi.object({
+  description: Joi.string().optional(),
+});
+
 export const PostSchema = Joi.object({
   url: Joi.string().uri().required(),
   description: Joi.string().optional(),

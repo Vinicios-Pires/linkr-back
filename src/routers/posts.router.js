@@ -2,7 +2,7 @@ import { Router } from "express";
 import postsController from "../controllers/posts.controller.js";
 import authMiddleware from "../middleware/auth.middleware.js";
 import JoiValidation from "../middleware/joi.validation.js";
-import { PostSchema } from "../schemas/posts.schema.js";
+import { PostSchema, DescriptionSchema } from "../schemas/posts.schema.js";
 
 const postsRouter = Router();
 
@@ -22,9 +22,9 @@ postsRouter.delete(
 );
 
 postsRouter.put(
-  "/timeline/:id",
+  "/posts/:id",
   authMiddleware.validateToken,
-  JoiValidation(PostSchema),
+  JoiValidation(DescriptionSchema),
   postsController.updatePost,
 );
 

@@ -29,8 +29,6 @@ const getPosts = async (userId) => {
   );
 };
 
-
-
 const getLatestPost = async () => {
   return db.query(`SELECT max(id) FROM posts;`);
 };
@@ -45,16 +43,11 @@ const deletePost = async (id) => {
   return db.query("DELETE FROM posts WHERE id = $1;", [id]);
 };
 
-const updatePost = async (url, description, userId) => {
-  return db.query(
-    `
-  UPDATE posts
-  SET
-    url = $1,
-    description = $2
-  WHERE "userId" = $3`,
-    [url, description, userId],
-  );
+const updatePost = async (description, postId) => {
+  return db.query(` UPDATE posts SET description = $1 WHERE id = $2;`, [
+    description,
+    postId,
+  ]);
 };
 
 const postsRepository = {

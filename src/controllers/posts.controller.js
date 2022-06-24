@@ -15,18 +15,15 @@ const createPost = async (req, res) => {
       (await linksRepository.getLinkByUrl(url)) ||
       (await linksRepository.createLink(url));
 
-      await postsRepository.createPost(url, description, userId, linkId)
-    const resultMakePost = await (postsRepository.getLatestPost());
+    await postsRepository.createPost(url, description, userId, linkId);
+    const resultMakePost = await postsRepository.getLatestPost();
 
-    console.log(resultMakePost.rows[0].max)
-    
+    console.log(resultMakePost.rows[0].max);
+
     const hashtagsId = await findOrCreateHashtag(description);
-        if (hashtagsId === -1) return res.sendStatus(500);
-        if (hashtagsId === 0) return res.sendStatus(201);
-        hashtagsRepository.insertManyPostHashtags(
-          resultMakePost.rows[0].max,
-            hashtagsId,
-        );
+    if (hashtagsId === -1) return res.sendStatus(500);
+    if (hashtagsId === 0) return res.sendStatus(201);
+    hashtagsRepository.insertManyPostHashtags(resultMakePost.rows[0].max, hashtagsId);
 
     res.sendStatus(201); // created
   } catch (err) {
@@ -75,26 +72,12 @@ const deletePost = async (req, res) => {
 
 const updatePost = async (req, res) => {
   const post = req.body;
-  const { id } = req.params;
-  const { user } = res.locals;
+  const { id: postId } = req.params;
 
-  if (isNaN(parseInt(id))) {
-    return res.sendStatus(400);
-  }
+  if (isNaN(parseInt(postId))) return res.sendStatus(400);
 
   try {
-    const result = await db.query(
-      `
-      SELECT * FROM posts WHERE url = $1 AND id != 2
-      `,
-      [post.url, id],
-    );
-    if (result.rowCount > 0) {
-      return res.sendStatus(409); // conflict
-    }
-
-    await postsRepository.updatePost(post.url, post.description, user.id);
-
+    await postsRepository.updatePost(post.description, postId);
     res.sendStatus(200); // ok
   } catch (err) {
     console.log(err);
