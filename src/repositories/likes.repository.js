@@ -14,9 +14,14 @@ const removeLike = async (postId, userId) => {
   ]);
 };
 
+const deleteLikesFromPost = async (postId) => {
+  await db.query('DELETE FROM likes WHERE "postId" = $1;', [postId]);
+};
+
 const likesRepository = {
   createLike,
   removeLike,
+  deleteLikesFromPost,
 };
 
 export default likesRepository;

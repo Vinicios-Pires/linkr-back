@@ -16,7 +16,7 @@ postsRouter.post(
 postsRouter.get("/timeline", authMiddleware.validateToken, postsController.getPosts);
 
 postsRouter.delete(
-  "/timeline/:id",
+  "/posts/:id",
   authMiddleware.validateToken,
   postsController.deletePost,
 );
