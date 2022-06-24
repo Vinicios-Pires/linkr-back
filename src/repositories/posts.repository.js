@@ -1,4 +1,5 @@
 import db from "./../config/db.js";
+import likesRepository from "./likes.repository.js";
 
 const createPost = async (url, description, userId, linkId) => {
   await db.query(
@@ -29,11 +30,13 @@ const getPosts = async (userId) => {
 };
 
 const getPostById = async (id) => {
-  return db.query("SELECT * FROM posts WHERE id = $1", [id]);
+  const { rows } = await db.query("SELECT * FROM posts WHERE id = $1", [id]);
+  return rows[0];
 };
 
 const deletePost = async (id) => {
-  return db.query("DELETE FROM posts WHERE id = $1", [id]);
+  await likesRepository.deleteLikesFromPost(id);
+  return db.query("DELETE FROM posts WHERE id = $1;", [id]);
 };
 
 const updatePost = async (url, description, userId) => {
