@@ -9,7 +9,7 @@ const createPost = async (url, description, userId, linkId) => {
 
 const getPosts = async (userId) => {
   return db.query(
-    `SELECT p.id, p.description, post_author."pictureUrl", post_author.username, 
+    `SELECT p.id, p.description, post_author."pictureUrl", post_author.username, post_author.id as "authorId",
     json_build_object(
       'title', links.title,
       'image', links.image,
